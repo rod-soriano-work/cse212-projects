@@ -21,8 +21,31 @@ public static class SetsAndMaps
     /// <param name="words">An array of 2-character words (lowercase, no duplicates)</param>
     public static string[] FindPairs(string[] words)
     {
-        // TODO Problem 1 - ADD YOUR CODE HERE
-        return [];
+        List<string> result = new List<string>();
+        HashSet<string> wordSet = new HashSet<string>();
+
+        foreach (string w in words)
+        {
+            string rev = "";
+            for (int i = w.Length - 1; i >= 0; i--)
+            {
+                rev = rev + w[i];
+            }
+
+            if (wordSet.Contains(rev))
+            {
+                result.Add(w + " & " + rev);
+            }
+
+            wordSet.Add(w);
+        }
+
+        string[] finalResult = new string[result.Count];
+        for (int i = 0; i < result.Count; i++)
+        {
+            finalResult[i] = result[i];
+        }
+        return finalResult;
     }
 
     /// <summary>
@@ -38,14 +61,26 @@ public static class SetsAndMaps
     /// <returns>fixed array of divisors</returns>
     public static Dictionary<string, int> SummarizeDegrees(string filename)
     {
-        var degrees = new Dictionary<string, int>();
-        foreach (var line in File.ReadLines(filename))
+        Dictionary<string, int> degreeCount = new Dictionary<string, int>();
+
+        string[] lines = File.ReadAllLines(filename);
+
+        foreach (string line in lines)
         {
-            var fields = line.Split(",");
-            // TODO Problem 2 - ADD YOUR CODE HERE
+            string[] parts = line.Split(",");
+            string degree = parts[3];
+
+            if (degreeCount.ContainsKey(degree))
+            {
+                degreeCount[degree] = degreeCount[degree] + 1;
+            }
+            else
+            {
+                degreeCount[degree] = 1;
+            }
         }
 
-        return degrees;
+        return degreeCount;
     }
 
     /// <summary>
@@ -66,8 +101,50 @@ public static class SetsAndMaps
     /// </summary>
     public static bool IsAnagram(string word1, string word2)
     {
-        // TODO Problem 3 - ADD YOUR CODE HERE
-        return false;
+        string w1NoSpace = word1.Replace(" ", "");
+        w1NoSpace = w1NoSpace.ToLower();
+
+        string w2NoSpace = word2.Replace(" ", "");
+        w2NoSpace = w2NoSpace.ToLower();
+
+        if (w1NoSpace.Length != w2NoSpace.Length)
+        {
+            return false;
+        }
+
+        Dictionary<char, int> charFreq = new Dictionary<char, int>();
+
+        for (int i = 0; i < w1NoSpace.Length; i++)
+        {
+            char c = w1NoSpace[i];
+            if (charFreq.ContainsKey(c))
+            {
+                charFreq[c]++;
+            }
+            else
+            {
+                charFreq[c] = 1;
+            }
+        }
+
+        for (int i = 0; i < w2NoSpace.Length; i++)
+        {
+            char c = w2NoSpace[i];
+
+            if (!charFreq.ContainsKey(c))
+            {
+                return false;
+            }
+
+            charFreq[c]--;
+            
+            if (charFreq[c] < 0)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /// <summary>
